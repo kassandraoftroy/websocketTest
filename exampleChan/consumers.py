@@ -8,9 +8,7 @@ def ws_connect(message):
     Group('users').add(message.reply_channel)
     Group('users').send({
         'text': json.dumps({
-            'username': message.user.username,
-            'is_logged_in': True,
-            'msg': False
+            'msg': 'login'
         })
     })
 
@@ -19,9 +17,7 @@ def ws_connect(message):
 def ws_disconnect(message):
     Group('users').send({
         'text': json.dumps({
-            'username': message.user.username,
-            'is_logged_in': False,
-            'msg':False
+            'msg': 'logout'
         })
     })
     Group('users').discard(message.reply_channel)
@@ -30,10 +26,9 @@ def ws_disconnect(message):
 def ws_receive(message):
     Group('users').send({
         'text': json.dumps({
-            'username': message.user.username,
-            'is_logged_in': True,
             'msg': message['text']	
-             })
+             
         })
+    })
 
 
