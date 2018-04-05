@@ -4,7 +4,8 @@
   <a href="{% url 'exampleChan:log_out' %}">Log out</a>
   <br>
   <br>
-  <p>
+  <input type="text" id='sender' size='60'>
+  <button id="submit">Submit</button>
 
   <p id='messages'></p>
 {% endblock content %}
@@ -30,6 +31,12 @@
 
     if (socket.readyState == WebSocket.OPEN) {
       socket.onopen();
+    }
+
+    document.getElementById('submit').onclick = function() {
+      if ($('#sender').val() != ""){
+        socket.send($('#sender').val());
+      }
     }
   </script>
 {% endblock script %}
