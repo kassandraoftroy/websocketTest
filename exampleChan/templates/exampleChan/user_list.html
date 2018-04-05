@@ -6,7 +6,7 @@
   <br>
   <input type="text" id='sender' size='60'>
   <button id="submit">Submit</button>
-
+  <br><br>
   <p id='messages'></p>
 {% endblock content %}
 
@@ -36,6 +36,7 @@
     document.getElementById('submit').onclick = function() {
       if ($('#sender').val() != ""){
         socket.send($('#sender').val());
+        document.getElementById('sender').value = "";
       }
     }
   </script>
