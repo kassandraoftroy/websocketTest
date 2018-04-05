@@ -1,0 +1,59 @@
+{% extends 'exampleChan/_base.html' %}
+
+{% block content %}
+  <a href="{% url 'exampleChan:log_out' %}">Log out</a>
+  <br>
+  <ul>
+    {% for user in users %}
+      <!-- NOTE: We escape HTML to prevent XSS attacks. -->
+      <li data-username="{{ user.username|escape }}">
+        {{ user.username|escape }}: {{ user.status }}
+      </li>
+    {% endfor %}
+  </ul>
+
+  <p id='textarea'></p>
+{% endblock content %}
+
+{% block script %}
+  <script>
+    var socket = new WebSocket('ws://' + window.location.host + '/users/');
+
+    socket.onopen = function open() {
+      console.log('WebSockets connection created.');
+      var list = $('li');
+      for (var i = 0; i<list.length; i++){
+      	var text = list[i].innerHTML;
+      	text = text.replace('Online', '<span style="color:green">Online</span>');
+      	text = text.replace('Offline', '<span style="color:red">Offline</span>');
+      	list[i].innerHTML = text;
+      }
+    };
+
+    socket.onmessage = function message(event) {
+      var data = JSON.parse(event.data);
+      // NOTE: We escape JavaScript to prevent XSS attacks.
+      console.log(data);
+      var username = encodeURI(data['username']);
+      var user = $('li').filter(function () {
+        return $(this).data('username') == username;
+      });
+
+      if (data['is_logged_in']) {
+        user.html(username + ': <span style="color:green">Online</span>');
+      }
+      else {
+        user.html(username + ': <span style="color:red">Offline</span>');
+      }
+    var msg = data['msg'];
+    if (msg.length>0){
+    	var p = document.getElementById('textarea');
+    	p.innerHTML += username + ': ' + msg;
+  	}
+    };
+
+    if (socket.readyState == WebSocket.OPEN) {
+      socket.onopen();
+    }
+  </script>
+{% endblock script %}
