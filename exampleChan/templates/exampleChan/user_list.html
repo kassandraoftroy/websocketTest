@@ -23,7 +23,7 @@
       // NOTE: We escape JavaScript to prevent XSS attacks.
       console.log(data);
       var msg = data['msg'];
-      if (msg != "login" and msg != "logout"){
+      if (msg.length>0){
         var p = document.getElementById('messages');
         p.innerHTML += '<p>' + msg + '</p>';
         }
@@ -36,7 +36,7 @@
     document.getElementById('submit').onclick = function() {
       if ($('#sender').val() != ""){
         socket.send($('#sender').val());
-        document.getElementById('sender').value = "";
+        document.getElementById('sender').value = ""
       }
     }
   </script>
