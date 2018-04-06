@@ -23,7 +23,7 @@
       // NOTE: We escape JavaScript to prevent XSS attacks.
       console.log(data);
       var msg = data['msg'];
-      if (msg.length>0){
+      if (msg != "login" and msg != "logout"){
         var p = document.getElementById('messages');
         p.innerHTML += '<p>' + msg + '</p>';
         }
